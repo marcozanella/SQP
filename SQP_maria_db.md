@@ -1,6 +1,7 @@
 # Hacking root password of MariaDB
-With Powershell - run with admin privileges
-    go to MariaDB installation folder (in the bin folder)
+Run Powershell with admin privileges
+Navigate to MariaDB installation password, in the bin folder
+
     see if MariaDB service is running: Get-service
     stop service: net stop MariaDB
 
