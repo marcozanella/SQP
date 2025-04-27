@@ -1,9 +1,14 @@
 # Hacking root password of MariaDB
-Run Powershell with admin privileges
-Navigate to MariaDB installation password, in the bin folder
 
-    see if MariaDB service is running: Get-service
-    stop service: net stop MariaDB
+1. Check if MariaDB service is running in your system
+   1.1 use the commend Get-service
+   1.2 if it is running, stop it
+   net stop MariaDB
+1. Run Powershell with admin privileges
+2. Navigate to MariaDB installation password, in the bin folder
+
+see if MariaDB service is running: Get-service
+stop service: net stop MariaDB
 
     start MariaDB without loading user privilege information, it will allow you to access the database command line with root privileges without entering a password. This will allow you to access the database without knowing the passphrase. To do this, you need to prevent the database from loading privilege tables that contain user privilege information. Since this carries a security risk, you should also avoid network activity in order to prevent other clients from connecting.
     .\mysqld --skip-grant-tables --skip-networking --shared-memory
