@@ -1,31 +1,39 @@
 # Hacking root password of MariaDB
 
 1. Check if MariaDB service is running in your system
-   1 use the commend Get-service
-   2 if it is running, stop it
-   net stop MariaDB
+    1. use the commend `Get-service`
+    2.  if it is running, stop it `net stop MariaDB`
 1. Run Powershell with admin privileges
-2. Navigate to MariaDB installation password, in the bin folder
+    1. Navigate to MariaDB installation password, in the bin folder
 
-see if MariaDB service is running: Get-service
-stop service: net stop MariaDB
+start MariaDB without loading user privilege information, it will allow you to access the database command line with root privileges without entering a password. This will allow you to access the database without knowing the passphrase. To do this, you need to prevent the database from loading privilege tables that contain user privilege information. Since this carries a security risk, you should also avoid network activity in order to prevent other clients from connecting.
+```
+.\mysqld --skip-grant-tables --skip-networking --shared-memory
+```
+This shell should NOT shut down, that is, now nothing can be entered into this command line window
 
-    start MariaDB without loading user privilege information, it will allow you to access the database command line with root privileges without entering a password. This will allow you to access the database without knowing the passphrase. To do this, you need to prevent the database from loading privilege tables that contain user privilege information. Since this carries a security risk, you should also avoid network activity in order to prevent other clients from connecting.
-    .\mysqld --skip-grant-tables --skip-networking --shared-memory
-    The shell should NOT shut down, that is, now nothing can be entered into this command line window
+With Powershell - run another shell, standard (no admin privileges) and go to MariaDB installation folder (in the bin folder)
 
-With Powershell - run standard (no admin privileges)
-    go to MariaDB installation folder (in the bin folder)
-    .\mysql -u root
-    FLUSH PRIVILEGES; - this loads the privileges table (to detect root user)
-    Depending on MariaDB version, either one will work:
-        ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
-        SET PASSWORD FOR 'root'@'localhost' = PASSWORD('new_password');
-    Do not forget to reload privileges
-        FLUSH PRIVILEGES;
-        Expect a positive feedback, like: Query OK, 0 rows affected (0.02 sec)
-    Exit session
-        exit;
+```
+.\mysql -u root
+FLUSH PRIVILEGES;
+```
+
+this loads the privileges table (to detect root user)
+Depending on MariaDB version, either one will work:
+```
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('new_password');
+```
+Do not forget to reload privileges
+```
+FLUSH PRIVILEGES;
+```
+Expect a positive feedback, like: ```Query OK, 0 rows affected (0.02 sec)```
+Exit session
+```
+exit;
+```
 
 Close all shells
 Restart server, or restart PC
@@ -33,11 +41,15 @@ You have changed root password
 
 
 Dumping entire database
+```
 mysqldump --user=root --password --lock-tables --databases statistic > before_reading.sql
+```
 
 Restoring from Dump
 To restore a MySQL backup, enter:
+```
 mysql -u root -p statistic < [filename].sql
+```
 
 Check also for a smaller set of tables
 
